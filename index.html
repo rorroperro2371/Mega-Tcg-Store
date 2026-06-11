@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Reset básico */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; background-color: #1a1228; color: #d8d8d8; }
+
+    /* Encabezado */
+    header {
+      background-color: #2f2144;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand img {
+      width: 180px;
+      height: auto;
+      border-radius: 8px;
+    }
+    .brand h1 {
+      color: #e0e0e0;
+      font-size: 1.2rem;
+      letter-spacing: 0.05em;
+      margin: 0;
+    }
+    nav {
+      margin-left: 30px;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 18px;
+      align-items: center;
+    }
+    nav a {
+      color: #e0e0e0;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1rem;
+      padding: 10px 14px;
+      border-radius: 8px;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+    nav a:hover {
+      color: #1a1228;
+      background-color: #c2b3ff;
+    }
+
+    /* Portada */
+    .hero {
+      background-color: #150b1f;
+      padding: 30px 20px;
+    }
+    .slider {
+      position: relative;
+      max-width: 1200px;
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: 20px;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+    }
+    .slides {
+      display: flex;
+      transition: transform 0.7s ease;
+    }
+    .slide {
+      min-width: 100%;
+      min-height: 420px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    .slide::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(26, 18, 40, 0.25), rgba(26, 18, 40, 0.85));
+    }
+    .slide-content {
+      position: absolute;
+      left: 40px;
+      bottom: 40px;
+      z-index: 1;
+      color: #f3e9ff;
+      max-width: 480px;
+    }
+    .slide-content span {
+      display: inline-block;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: #e5d0ff;
+      font-size: 0.9rem;
+    }
+    .slide-content h2 {
+      font-size: 2.8rem;
+      margin: 0 0 18px;
+      line-height: 1.05;
+    }
+    .slide-content p {
+      margin: 0 0 20px;
+      color: #d4cde4;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+    .slide-content .btn {
+      display: inline-block;
+      background-color: #c2b3ff;
+      color: #1a1228;
+      padding: 14px 24px;
+      font-weight: bold;
+      border-radius: 6px;
+      text-decoration: none;
+    }
+    .slide-content .btn:hover {
+      background-color: #a17bff;
+      color: #ffffff;
+    }
+    .slider-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px;
+      height: 48px;
+      border: none;
+      border-radius: 50%;
+      background-color: rgba(194, 179, 255, 0.95);
+      color: #1a1228;
+      font-size: 1.8rem;
+      cursor: pointer;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+    }
+    .slider-btn.prev { left: 16px; }
+    .slider-btn.next { right: 16px; }
+    .slider-dots {
+      position: absolute;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 1;
+    }
+    .slider-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.5);
+      background-color: rgba(255,255,255,0.25);
+      cursor: pointer;
+    }
+    .slider-dot.active {
+      background-color: #c2b3ff;
+      border-color: #c2b3ff;
+    }
+    .btn {
+      background-color: #c2b3ff;
+      color: #1a1228;
+      padding: 10px 20px;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 5px;
+    }
+    .btn:hover {
+      background-color: #a17bff;
+      color: #ffffff;
+    }
+
+    /* Catálogo */
+    #catalogo { padding: 50px 20px; }
+    #catalogo h2 { text-align: center; margin-bottom: 30px; color: #d7c8ff; }
+    .productos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .producto {
+      background-color: #2c2240;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      transition: transform 0.2s;
+    }
+    .producto:hover { transform: scale(1.05); }
+    .producto img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+    .producto h3 { margin: 15px 0; color: #e8e4ff; }
+    .producto p { color: #c0c0c0; font-weight: bold; }
+    .producto button {
+      background-color: #c2b3ff;
+      border: none;
+      padding: 10px 15px;
+      margin-top: 10px;
+      cursor: pointer;
+      border-radius: 5px;
+      font-weight: bold;
+      color: #1a1228;
+    }
+    .producto button:hover {
+      background-color: #a17bff;
+      color: #ffffff;
+    }
+    .producto-details {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .inspect-btn {
+      background-color: transparent;
+      border: 1px solid #c2b3ff;
+      color: #1a1228;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+    .inspect-btn:hover {
+      background-color: #a17bff;
+      color: #ffffff;
+      border-color: #a17bff;
+    }
+
+    /* Carrito */
+    #carrito { padding: 50px 20px; text-align: center; }
+    #carrito h2 { color: #d7c8ff; margin-bottom: 20px; }
+    #cart-items { margin: 0 auto; max-width: 960px; display: grid; gap: 16px; }
+    .cart-empty { color: #c8c8c8; font-size: 1rem; }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      background-color: #23173a;
+      padding: 18px;
+      border-radius: 12px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
+    }
+    .cart-item-details { text-align: left; }
+    .cart-item-details h3 { margin: 0 0 6px; color: #e8e4ff; }
+    .cart-item-details p { margin: 0; color: #c0c0c0; }
+    .cart-item-actions { display: flex; align-items: center; gap: 12px; }
+    .cart-item-actions span { color: #d7c8ff; font-weight: bold; }
+    .cart-item-actions button {
+      background-color: #c2b3ff;
+      border: none;
+      color: #1a1228;
+      padding: 10px 12px;
+      cursor: pointer;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+    .cart-item-actions button:hover { background-color: #a17bff; }
+    .cart-summary {
+      margin: 30px auto 0;
+      max-width: 960px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      padding: 18px 20px;
+      background-color: #2c2240;
+      border-radius: 12px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
+    }
+    .cart-summary p { margin: 0; color: #d7c8ff; font-size: 1.1rem; }
+    .cart-summary button {
+      background-color: #c2b3ff;
+      border: none;
+      padding: 12px 24px;
+      cursor: pointer;
+      border-radius: 8px;
+      font-weight: bold;
+      color: #1a1228;
+    }
+    .cart-summary button:hover { background-color: #a17bff; }
+
+    .product-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background-color: rgba(8, 6, 20, 0.92);
+      backdrop-filter: blur(12px);
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 100;
+    }
+    .product-modal.active {
+      display: flex;
+    }
+    .modal-card {
+      width: 100%;
+      max-width: 980px;
+      background-color: #1d1130;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+      position: relative;
+    }
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 44px;
+      height: 44px;
+      border: none;
+      border-radius: 50%;
+      background-color: rgba(194, 179, 255, 0.95);
+      color: #1a1228;
+      font-size: 1.6rem;
+      cursor: pointer;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+    }
+    .modal-content {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 24px;
+      padding: 28px;
+    }
+    .modal-slider {
+      display: grid;
+      gap: 16px;
+    }
+    .modal-main-image {
+      width: 100%;
+      min-height: 320px;
+      object-fit: cover;
+      border-radius: 16px;
+      background-color: #1a0d24;
+    }
+    .modal-thumb-container {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .modal-thumb {
+      width: 86px;
+      height: 86px;
+      object-fit: cover;
+      border-radius: 14px;
+      border: 2px solid transparent;
+      cursor: pointer;
+    }
+    .modal-thumb.active {
+      border-color: #c2b3ff;
+    }
+    .modal-info span {
+      display: inline-block;
+      margin-bottom: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #e5d0ff;
+      font-size: 0.85rem;
+    }
+    .modal-info h2 {
+      margin: 0 0 16px;
+      color: #f4ecff;
+      font-size: 2rem;
+      line-height: 1.05;
+    }
+    .modal-info p {
+      color: #d2c7e4;
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
+    .modal-info .modal-price {
+      margin-bottom: 18px;
+      color: #c2b3ff;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    .modal-info .btn {
+      display: inline-block;
+      width: 100%;
+      text-align: center;
+      padding: 14px 18px;
+      border-radius: 10px;
+    }
+    .modal-info .btn:hover {
+      background-color: #a17bff;
+    }
+
+    /* Pie de página */
+    footer {
+      background-color: #110c1b;
+      color: #f7f1b5;
+      padding: 50px 20px 30px;
+      margin-top: 30px;
+    }
+    .footer-top {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+    .footer-card {
+      background-color: #161023;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 28px 24px;
+      text-align: left;
+      box-shadow: inset 0 0 0 1px rgba(194,179,255,0.06);
+    }
+    .footer-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #f7f1b5;
+    }
+    .footer-card p,
+    .footer-card a,
+    .footer-card span {
+      color: #e6e0c1;
+      line-height: 1.8;
+      font-size: 0.98rem;
+    }
+    .footer-card span {
+      display: inline-block;
+      margin-bottom: 16px;
+      font-weight: 700;
+      color: #f7f1b5;
+      background-color: #3e365a;
+      padding: 4px 10px;
+      border-radius: 999px;
+      letter-spacing: 0.08em;
+    }
+    .footer-card a {
+      display: inline-block;
+      margin-top: 16px;
+      color: #c2b3ff;
+      text-decoration: none;
+    }
+    .footer-card a:hover {
+      color: #ffffff;
+    }
+    .footer-bottom {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 28px;
+      align-items: start;
+    }
+    .footer-brand {
+      text-align: left;
+    }
+    .footer-brand p {
+      max-width: 380px;
+      margin: 18px 0 0;
+      color: #e6e0c1;
+      line-height: 1.7;
+    }
+    .footer-brand img {
+      width: 68px;
+      height: auto;
+      display: block;
+      margin-bottom: 16px;
+    }
+    .footer-links,
+    .footer-contact {
+      text-align: left;
+    }
+    .footer-links h4,
+    .footer-contact h4 {
+      margin-bottom: 18px;
+      font-size: 1rem;
+      letter-spacing: 0.15em;
+      color: #f7f1b5;
+      text-transform: uppercase;
+    }
+    .footer-links ul,
+    .footer-contact ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .footer-links li,
+    .footer-contact li {
+      margin-bottom: 12px;
+      color: #e6e0c1;
+    }
+    .footer-links a,
+    .footer-contact a {
+      color: #e6e0c1;
+      text-decoration: none;
+    }
+    .footer-links a:hover,
+    .footer-contact a:hover {
+      color: #ffffff;
+    }
+    .footer-bottom .footer-socials {
+      display: flex;
+      gap: 14px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+    .footer-socials a {
+      color: #f7f1b5;
+      text-decoration: none;
+      border: 1px solid rgba(247,241,181,0.2);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+    .footer-socials a:hover {
+      background-color: #c2b3ff;
+      color: #1a1228;
+    }
+
+    .scroll-top {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      width: 52px;
+      height: 52px;
+      background-color: #8b63ff;
+      color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      text-decoration: none;
+      font-size: 1.4rem;
+      box-shadow: 0 18px 35px rgba(0, 0, 0, 0.24);
+      transition: transform 0.2s ease, opacity 0.2s ease;
+      z-index: 150;
+    }
+    .scroll-top:hover {
+      transform: scale(1.08);
+      opacity: 0.95;
+    }
+
+    @media (max-width: 768px) {
+      .modal-content {
+        grid-template-columns: 1fr;
+      }
+      .footer-bottom {
+        grid-template-columns: 1fr;
+      }
+      .footer-card {
+        padding: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Encabezado -->
+  <header>
+    <div class="brand">
+      <img src="img/Mega tcg logo.png" alt="MEGA TCG Store logo">
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#inicio">Inicio</a></li>
+        <li><a href="#catalogo">Catálogo</a></li>
+        <li><a href="#carrito">Carrito 🛒</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Portada -->
+  <section id="inicio" class="hero">
+    <div class="slider">
+      <div class="slides">
+        <div class="slide" style="background-image: url('img/imagen\ deslizadora\ tio.jpg');">
+          <div class="slide-content">
+            <span>Novedades</span>
+            <h2>Ofertas y cartas de colección</h2>
+            <p>Compra ahora y consigue envío gratis en compras sobre $100000 CLP.</p>
+            <a href="#catalogo" class="btn">Ver catálogo</a>
+          </div>
+        </div>
+        <div class="slide" style="background-image: url('img/imagendeslizadora2.jpg');">
+          <div class="slide-content">
+            <span>Popular</span>
+            <h2>Productos pokemon top ventas</h2>
+            <p>Consigue las mejores cartas para competir en ligas y eventos como todo un profesional.</p>
+            <a href="#catalogo" class="btn">Comprar ahora</a>
+          </div>
+        </div>
+        <div class="slide" style="background-image: url('img/pokemon-perfect-order-banner.jpg');">
+          <div class="slide-content">
+            <span>Top ventas</span>
+            <h2>Haz tu próxima batalla MEGA legendaria</h2>
+            <p>Elige entre Singles, ETB y más</p>
+            <a href="#catalogo" class="btn">Explorar productos</a>
+          </div>
+        </div>
+      </div>
+      <button class="slider-btn prev" aria-label="Anterior">‹</button>
+      <button class="slider-btn next" aria-label="Siguiente">›</button>
+      <div class="slider-dots"></div>
+    </div>
+  </section>
+
+  <!-- Catálogo -->
+  <section id="catalogo">
+    <h2>Catálogo de Productos</h2>
+    <div class="productos">
+      <div class="producto">
+        <img src="img/Booster bundle 1.jfif" alt="Booster Bundle Caos Creciente">
+        <h3>Booster Bundle Caos Creciente</h3>
+        <p>$32.000 CLP</p>
+        <div class="producto-details">
+          <button data-name="Booster Bundle Caos Creciente" data-price="32000" class="add-cart">Añadir al carrito</button>
+          <button class="inspect-btn" data-name="Booster Bundle Caos Creciente" data-price="32000" data-desc="Caja con sobres premium que incluye cartas de colección y boosters raros." data-images="img/Booster bundle 1.jfif,img/ETB.jpg,img/perfect-order-booster-bundle-ING-Y-ESP-3-570x811.webp">Inspeccionar</button>
+        </div>
+      </div>
+      <div class="producto">
+        <img src="img/ETB.jpg" alt="Elite Trainer Box Equilibrio perfecto">
+        <h3>Elite Trainer Box Equilibrio perfecto</h3>
+        <p>$65.000 CLP</p>
+        <div class="producto-details">
+          <button data-name="Elite Trainer Box Equilibrio perfecto" data-price="65000" class="add-cart">Añadir al carrito</button>
+          <button class="inspect-btn" data-name="Elite Trainer Box Equilibrio perfecto" data-price="65000" data-desc="Completa tu colección con esta Elite Trainer Box llena de cartas y accesorios oficiales." data-images="img/ETB.jpg,img/Booster bundle 1.jfif,img/pokemon-perfect-order-banner.jpg">Inspeccionar</button>
+        </div>
+      </div>
+      <div class="producto">
+        <img src="img/perfect-order-booster-bundle-ING-Y-ESP-3-570x811.webp" alt="Booster Bundle Equilibrio perfecto">
+        <h3>Booster Bundle Equilibrio perfecto</h3>
+        <p>$30.000 CLP</p>
+        <div class="producto-details">
+          <button data-name="Booster Bundle Equilibrio perfecto" data-price="30000" class="add-cart">Añadir al carrito</button>
+          <button class="inspect-btn" data-name="Booster Bundle Equilibrio perfecto" data-price="30000" data-desc="Lote de cartas con temática equilibrada para jugadores que buscan estabilidad en su mazo." data-images="img/perfect-order-booster-bundle-ING-Y-ESP-3-570x811.webp,img/Booster bundle 1.jfif,img/ETB.jpg">Inspeccionar</button>
+        </div>
+      </div>
+      <div class="producto">
+        <img src="img/Chaos-Rising-Build-Battle-Box.webp" alt="Build and Battle Caos Creciente">
+        <h3>Build and Battle Caos Creciente</h3>
+        <p>$18.000 CLP</p>
+        <div class="producto-details">
+          <button data-name="Build and Battle Caos Creciente" data-price="18000" class="add-cart">Añadir al carrito</button>
+          <button class="inspect-btn" data-name="Build and Battle Caos Creciente" data-price="18000" data-desc="Pack de sobres ideal para nuevos coleccionistas y jugadores casuales." data-images="img/Booster bundle 1.jfif,img/pokemon-perfect-order-banner.jpg,img/ETB.jpg">Inspeccionar</button>
+        </div>
+      </div>
+      <div class="producto">
+        <img src="img/etb pitch black.webp" alt="Preventa ETB Pitch Black">
+        <h3>Preventa ETB Pitch Black</h3>
+        <p>$65.990 CLP</p>
+        <div class="producto-details">
+          <button data-name="Preventa ETB Pitch Black" data-price="65990" class="add-cart">Añadir al carrito</button>
+          <button class="inspect-btn" data-name="Preventa ETB Pitch Black" data-price="65990" data-desc="Selección especial de cartas premium con mejores estadísticas y arte exclusivo." data-images="img/perfect-order-booster-bundle-ING-Y-ESP-3-570x811.webp,img/Booster bundle 1.jfif,img/ETB.jpg">Inspeccionar</button>
+        </div>
+      </div>
+      <div class="producto">
+        <img src="img/Booster bundle 2.webp" alt="Preventa Booster Bundle Pitch Black">
+        <h3>Preventa Booster Bundle Pitch Black</h3>
+        <p>$36.990 CLP</p>
+        <div class="producto-details">
+          <button data-name="Preventa Booster Bundle Pitch Black" data-price="36990" class="add-cart">Añadir al carrito</button>
+          <button class="inspect-btn" data-name="Preventa Booster Bundle Pitch Black" data-price="36990" data-desc="Selección especial de cartas premium con mejores estadísticas y arte exclusivo." data-images="img/ETB.jpg,img/Booster bundle 1.jfif,img/pokemon-perfect-order-banner.jpg">Inspeccionar</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Carrito -->
+  <section id="carrito">
+    <h2>Carrito de Compras</h2>
+    <div id="cart-items">
+      <p class="cart-empty">No hay productos en el carrito.</p>
+    </div>
+    <div class="cart-summary">
+      <p>Total del carrito: <strong id="cart-total">$0 CLP</strong></p>
+      <button id="checkout-btn">Pagar ahora</button>
+    </div>
+  </section>
+
+  <div class="product-modal" id="product-modal">
+    <div class="modal-card">
+      <button class="modal-close" id="modal-close">×</button>
+      <div class="modal-content">
+        <div class="modal-slider">
+          <img id="modal-main-image" class="modal-main-image" src="img/Booster bundle 1.jfif" alt="Imagen del producto">
+          <div class="modal-thumb-container" id="modal-thumb-container">
+            <img class="modal-thumb active" src="img/Booster bundle 1.jfif" data-src="img/Booster bundle 1.jfif" alt="Miniatura 1">
+            <img class="modal-thumb" src="img/ETB.jpg" data-src="img/ETB.jpg" alt="Miniatura 2">
+            <img class="modal-thumb" src="img/perfect-order-booster-bundle-ING-Y-ESP-3-570x811.webp" data-src="img/perfect-order-booster-bundle-ING-Y-ESP-3-570x811.webp" alt="Miniatura 3">
+          </div>
+        </div>
+        <div class="modal-info">
+          <span>Detalle</span>
+          <h2 id="modal-title">Nombre del producto</h2>
+          <p class="modal-price" id="modal-price">$0 CLP</p>
+          <p id="modal-description">Aquí puedes agregar una pequeña descripción del producto. Usa este espacio para una reseña breve y clara.</p>
+          <button id="modal-add-cart" class="btn">Añadir al carrito</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pie de página -->
+  <footer>
+    <div class="footer-top">
+      <div class="footer-card">
+        <span>PUNTO DE RECOGIDA</span>
+        <h3>MEGA TCG STORE DESPACHO</h3>
+        <p>Av Kennedy, Tal tal 936 <br>Rancagua - Machalí<br>Región Libertador Bernardo O'Higgins - Chile</p>
+        <a href="#">Ver más detalles</a>
+      </div>
+      <div class="footer-card">
+        <span>PUNTO DE RECOGIDA</span>
+        <h3>ALA CHU CHA</h3>
+        <p> Camino Ala senda chu cha<br>9340000 Machalí - Chucha<br>Región Libertador Bernardo O'Higgins - Chile</p>
+        <a href="#">Ver más detalles</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-brand">
+        <img src="img/Mega tcg logo.png" alt="Mega TCG Store Logo">
+        <p>Empresa creada por un entusiasta y fan de pokemón, actualmente un un jugador de liga en potencia.</p>
+        <div class="footer-socials">
+          <a href="#">Instagram</a>
+          <a href="#">YouTube</a>
+          <a href="#">TikTok</a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <h4>INFORMACIÓN</h4>
+        <ul>
+          <li><a href="#">Términos y Condiciones</a></li>
+          <li><a href="#">Contacto</a></li>
+          <li><a href="#">Política de reembolso</a></li>
+          <li><a href="#">Política de privacidad</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h4>CONTÁCTANOS</h4>
+        <ul>
+          <li><a href="mailto:MEGATCGSTORE@gmail.com">MEGATCGSTORE@gmail.com</a></li>
+          <li><a href="tel:+56 9 4793 0182">+56 9 4793 0182</a></li>
+          <li><a href="https://wa.me/56947930182" target="_blank">WhatsApp</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <a href="#inicio" class="scroll-top" aria-label="Ir arriba">↑</a>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const dotsContainer = document.querySelector('.slider-dots');
+    const prevBtn = document.querySelector('.slider-btn.prev');
+    const nextBtn = document.querySelector('.slider-btn.next');
+    let current = 0;
+    let slideTimer;
+
+    function createDots() {
+      slides.forEach((_, index) => {
+        const dot = document.createElement('button');
+        dot.className = 'slider-dot';
+        dot.setAttribute('aria-label', `Slide ${index + 1}`);
+        dot.addEventListener('click', () => goToSlide(index));
+        dotsContainer.appendChild(dot);
+      });
+    }
+
+    function updateSlider() {
+      const track = document.querySelector('.slides');
+      track.style.transform = `translateX(-${current * 100}%)`;
+      document.querySelectorAll('.slider-dot').forEach((dot, index) => {
+        dot.classList.toggle('active', index === current);
+      });
+    }
+
+    function goToSlide(index) {
+      current = index;
+      updateSlider();
+      resetTimer();
+    }
+
+    function changeSlide(direction) {
+      current = (current + direction + slides.length) % slides.length;
+      updateSlider();
+      resetTimer();
+    }
+
+    function resetTimer() {
+      clearInterval(slideTimer);
+      slideTimer = setInterval(() => changeSlide(1), 6000);
+    }
+
+    createDots();
+    updateSlider();
+    prevBtn.addEventListener('click', () => changeSlide(-1));
+    nextBtn.addEventListener('click', () => changeSlide(1));
+    resetTimer();
+
+    const cartItemsContainer = document.getElementById('cart-items');
+    const cartTotalLabel = document.getElementById('cart-total');
+    const checkoutBtn = document.getElementById('checkout-btn');
+    const addButtons = document.querySelectorAll('.producto .add-cart');
+    const cart = [];
+
+    function formatPrice(value) {
+      return value.toLocaleString('es-CL') + ' CLP';
+    }
+
+    function renderCart() {
+      cartItemsContainer.innerHTML = '';
+      if (!cart.length) {
+        cartItemsContainer.innerHTML = '<p class="cart-empty">No hay productos en el carrito.</p>';
+        cartTotalLabel.textContent = '$0 CLP';
+        return;
+      }
+
+      let total = 0;
+      cart.forEach(item => {
+        total += item.price * item.quantity;
+        const cartItem = document.createElement('div');
+        cartItem.className = 'cart-item';
+        cartItem.innerHTML = `
+          <div class="cart-item-details">
+            <h3>${item.name}</h3>
+            <p>Precio unitario: ${formatPrice(item.price)}</p>
+            <p>Cantidad: ${item.quantity}</p>
+          </div>
+          <div class="cart-item-actions">
+            <span>${formatPrice(item.price * item.quantity)}</span>
+            <button data-name="${item.name}">Eliminar</button>
+          </div>
+        `;
+        cartItemsContainer.appendChild(cartItem);
+      });
+
+      cartTotalLabel.textContent = formatPrice(total);
+      cartItemsContainer.querySelectorAll('.cart-item-actions button').forEach(button => {
+        button.addEventListener('click', () => removeFromCart(button.dataset.name));
+      });
+    }
+
+    function addToCart(name, price) {
+      const existing = cart.find(item => item.name === name);
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        cart.push({ name, price, quantity: 1 });
+      }
+      renderCart();
+    }
+
+    function removeFromCart(name) {
+      const index = cart.findIndex(item => item.name === name);
+      if (index !== -1) {
+        cart.splice(index, 1);
+        renderCart();
+      }
+    }
+
+    addButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const name = button.dataset.name;
+        const price = Number(button.dataset.price);
+        addToCart(name, price);
+      });
+    });
+
+    checkoutBtn.addEventListener('click', () => {
+      if (!cart.length) {
+        alert('El carrito está vacío. Agrega productos primero.');
+        return;
+      }
+      alert('Gracias por tu compra. El total es ' + cartTotalLabel.textContent + '.');
+      cart.length = 0;
+      renderCart();
+    });
+
+    const inspectButtons = document.querySelectorAll('.inspect-btn');
+    const modal = document.getElementById('product-modal');
+    const modalClose = document.getElementById('modal-close');
+    const modalTitle = document.getElementById('modal-title');
+    const modalPrice = document.getElementById('modal-price');
+    const modalDescription = document.getElementById('modal-description');
+    const modalMainImage = document.getElementById('modal-main-image');
+    const modalThumbContainer = document.getElementById('modal-thumb-container');
+    const modalAddCart = document.getElementById('modal-add-cart');
+    let activeProduct = null;
+
+    function openProductModal(button) {
+      const name = button.dataset.name;
+      const price = Number(button.dataset.price);
+      const desc = button.dataset.desc || 'Aquí puedes agregar una pequeña descripción del producto. Usa este espacio para una reseña breve y clara.';
+      const images = button.dataset.images ? button.dataset.images.split(',') : [button.closest('.producto').querySelector('img').src];
+
+      activeProduct = { name, price };
+      modalTitle.textContent = name;
+      modalPrice.textContent = formatPrice(price);
+      modalDescription.textContent = desc;
+      modalMainImage.src = images[0] || button.closest('.producto').querySelector('img').src;
+      modalMainImage.alt = name;
+
+      modalThumbContainer.innerHTML = images.map((src, index) => `
+        <img class="modal-thumb${index === 0 ? ' active' : ''}" src="${src.trim()}" data-src="${src.trim()}" alt="Imagen ${index + 1}">
+      `).join('');
+
+      modalThumbContainer.querySelectorAll('.modal-thumb').forEach(thumb => {
+        thumb.addEventListener('click', () => {
+          document.querySelectorAll('.modal-thumb').forEach(t => t.classList.remove('active'));
+          thumb.classList.add('active');
+          modalMainImage.src = thumb.dataset.src;
+        });
+      });
+
+      modal.classList.add('active');
+    }
+
+    function closeModal() {
+      modal.classList.remove('active');
+    }
+
+    inspectButtons.forEach(button => {
+      button.addEventListener('click', () => openProductModal(button));
+    });
+
+    modalClose.addEventListener('click', closeModal);
+    modal.addEventListener('click', event => {
+      if (event.target === modal) closeModal();
+    });
+
+    modalAddCart.addEventListener('click', () => {
+      if (!activeProduct) return;
+      addToCart(activeProduct.name, activeProduct.price);
+      closeModal();
+    });
+  </script>
+</body>
+</html>
